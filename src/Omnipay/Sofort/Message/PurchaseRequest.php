@@ -4,7 +4,7 @@ namespace Omnipay\Sofort\Message;
 
 use SimpleXMLElement;
 
-class AuthorizeRequest extends AbstractRequest
+class PurchaseRequest extends AbstractRequest
 {
     public function getData()
     {
@@ -41,6 +41,6 @@ class AuthorizeRequest extends AbstractRequest
 
     protected function createResponse($response)
     {
-        return $this->response = new AuthorizeResponse($this, $response);
+        return $this->response = new PurchaseResponse($this, $response);
     }
 }

@@ -9,40 +9,34 @@ SOFORT Überweisung Omnipay gateway
 
 #### API Notes
 
-This gateway only provides 2 methods to place a successful transaction. The first one is `authorize` which initializes an authorization and returns a redirect url. 
+This gateway only provides 2 methods to place a successful transaction. The first one is `purchase` which initializes a purchase and returns a redirect url.
 
 The second one is `completeAuthorize`. This method doesn't actually complete anything. Since SOFORT Überweisung doesn't have a `capture` functionality, the only way to know about a transaction is checking that transaction details. According to official docs, if there is no any successful or failed transactions, the API will return empty `transactions` XML object.
 
 #### Installation
 
-To install, simply add it to your composer.json file:
+Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply run:
 
-```json
-{
-    "require": {
-        "aimeoscom/omnipay-sofort": "~2.0"
-    }
-}
 ```
-
-and run `composer update`
+composer require gentor/omnipay-sofort
+```
 
 #### Usage
 
 For general usage instructions, please see the main [Omnipay](https://github.com/omnipay/omnipay) repository.
 
-**1. Authorize**
+**1. Purchase**
 
 ```php
 $gateway = Omnipay::create('Sofort');
 $gateway->initialize(array(
-    'username' => 'your_account_id',
-    'password' => 'password',
+    'username' => 'sofort_customer_id',
+    'password' => 'sofort_api_key',
     'projectId' => 'sofort_project_id',
     'testMode' => true
 ));
 
-$response = $gateway->authorize(array(
+$response = $gateway->purchase(array(
     'amount' => 199.00,
     'description' => 'Google Nexus 4',
 ))->send();
