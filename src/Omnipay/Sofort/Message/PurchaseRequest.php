@@ -4,8 +4,15 @@ namespace Omnipay\Sofort\Message;
 
 use SimpleXMLElement;
 
+/**
+ * Class PurchaseRequest
+ * @package Omnipay\Sofort\Message
+ */
 class PurchaseRequest extends AbstractRequest
 {
+    /**
+     * @return SimpleXMLElement
+     */
     public function getData()
     {
         $data = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><multipay/>');
@@ -31,7 +38,7 @@ class PurchaseRequest extends AbstractRequest
         }
 
         $su = $data->addChild('su');
-        $su->addChild('customer_protection', (int) (bool) $this->getProtection());
+        $su->addChild('customer_protection', (int)(bool)$this->getProtection());
 
         $sender = $data->addChild('sender');
         $sender->addChild('country_code', $this->getCountry());
@@ -39,6 +46,10 @@ class PurchaseRequest extends AbstractRequest
         return $data;
     }
 
+    /**
+     * @param $response
+     * @return PurchaseResponse
+     */
     protected function createResponse($response)
     {
         return $this->response = new PurchaseResponse($this, $response);
