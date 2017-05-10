@@ -2,7 +2,7 @@
 
 namespace Omnipay\Sofort\Message;
 
-use InvalidArgumentException;
+use Omnipay\Common\Exception\InvalidRequestException;
 use SimpleXMLElement;
 
 /**
@@ -13,6 +13,7 @@ class NotifyRequest extends AbstractRequest
 {
     /**
      * @return SimpleXMLElement
+     * @throws InvalidRequestException
      */
     public function getData()
     {
@@ -23,7 +24,7 @@ class NotifyRequest extends AbstractRequest
             if (isset($xml->transaction)) {
                 $this->setTransactionReference((string)$xml->transaction);
             } else {
-                throw new InvalidArgumentException('Missing transaction id');
+                throw new InvalidRequestException("The transaction parameter is required");
             }
         }
 
