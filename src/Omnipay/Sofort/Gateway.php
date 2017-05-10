@@ -119,24 +119,6 @@ class Gateway extends AbstractGateway
 
     /**
      * @param array $parameters
-     * @return \Omnipay\Common\Message\AbstractRequest|\Omnipay\Common\Message\RequestInterface
-     */
-    public function authorize(array $parameters = array())
-    {
-        return $this->purchase($parameters);
-    }
-
-    /**
-     * @param array $parameters
-     * @return \Omnipay\Common\Message\AbstractRequest|\Omnipay\Common\Message\RequestInterface
-     */
-    public function completeAuthorize(array $parameters = array())
-    {
-        return $this->completePurchase($parameters);
-    }
-
-    /**
-     * @param array $parameters
      * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function purchase(array $parameters = array())
@@ -145,11 +127,50 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * Handle notification callback.
+     * Replaces completeAuthorize() and completePurchase()
+     *
+     * @param array $parameters
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function acceptNotification(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Sofort\Message\NotifyRequest', $parameters);
+    }
+
+    /**
+     * Please now use purchase()
+     * @deprecated
+     *
+     * @param array $parameters
+     * @return \Omnipay\Common\Message\AbstractRequest|\Omnipay\Common\Message\RequestInterface
+     */
+    public function authorize(array $parameters = array())
+    {
+        return $this->purchase($parameters);
+    }
+
+    /**
+     * Please now use acceptNotification()
+     * @deprecated
+     *
+     * @param array $parameters
+     * @return \Omnipay\Common\Message\AbstractRequest|\Omnipay\Common\Message\RequestInterface
+     */
+    public function completeAuthorize(array $parameters = array())
+    {
+        return $this->acceptNotification($parameters);
+    }
+
+    /**
+     * Please now use acceptNotification()
+     * @deprecated
+     *
      * @param array $parameters
      * @return \Omnipay\Common\Message\AbstractRequest
      */
     public function completePurchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Sofort\Message\CompleteAuthorizeRequest', $parameters);
+        return $this->acceptNotification($parameters);
     }
 }

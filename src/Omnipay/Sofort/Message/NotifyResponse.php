@@ -5,10 +5,10 @@ namespace Omnipay\Sofort\Message;
 use Omnipay\Common\Message\RedirectResponseInterface;
 
 /**
- * Class CompleteAuthorizeResponse
+ * Class NotifyResponse
  * @package Omnipay\Sofort\Message
  */
-class CompleteAuthorizeResponse extends AbstractResponse implements RedirectResponseInterface
+class NotifyResponse extends AbstractResponse
 {
     /**
      * @return bool
@@ -16,6 +16,18 @@ class CompleteAuthorizeResponse extends AbstractResponse implements RedirectResp
     public function isSuccessful()
     {
         return isset($this->data->transaction_details);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getTransactionReference()
+    {
+        if (isset($this->data->transaction_details->transaction)) {
+            return (string)$this->data->transaction_details->transaction;
+        }
+
+        return null;
     }
 
     /**

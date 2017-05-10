@@ -11,7 +11,7 @@ SOFORT Überweisung Omnipay gateway
 
 This gateway only provides 2 methods to place a successful transaction. The first one is `purchase` which initializes a purchase and returns a redirect url.
 
-The second one is `completeAuthorize`. This method doesn't actually complete anything. Since SOFORT Überweisung doesn't have a `capture` functionality, the only way to know about a transaction is checking that transaction details. According to official docs, if there is no any successful or failed transactions, the API will return empty `transactions` XML object.
+The second one is `acceptNotification`. This method receives status notification from SOFORT Überweisung and validates it by getting `transaction_details` from the API.
 
 #### Installation
 
@@ -41,10 +41,10 @@ $response = $gateway->purchase(array(
     'description' => 'Google Nexus 4',
 ))->send();
 
-$transactionReference = $response->getTransactionReference();
-
-if ($response->isRedirect()) {
+if ($response->isSuccessful() && $response->isRedirect()) {
     // redirect to offsite payment gateway
+    $transactionReference = $response->getTransactionReference();
+    $transactionStatus = $response->getTransactionStatus();
     $response->redirect();
 } else {
     // payment failed: display message to customer
@@ -53,23 +53,23 @@ if ($response->isRedirect()) {
 
 ```
 
-**2. Complete Authorize**
+**2. Accept Notification**
 
 ```php
 $gateway = Omnipay::create('Sofort');
 $gateway->initialize(array(
-    'username' => 'your_account_id',
-    'password' => 'password',
+    'username' => 'sofort_customer_id',
+    'password' => 'sofort_api_key',
     'projectId' => 'sofort_project_id',
     'testMode' => true
 ));
 
-$response = $gateway->completeAuthorize(array(
-    'transactionReference' => $transactionReference,
-))->send();
+$response = $gateway->acceptNotification()->send();
 
 if ($response->isSuccessful()) {
     // payment was successful
+    $transactionReference = $response->getTransactionReference();
+    $transactionStatus = $response->getTransactionStatus();
     print_r($response);
 } else {
     // payment failed: display message to customer
