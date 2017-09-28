@@ -27,6 +27,11 @@ class PurchaseRequest extends AbstractRequest
             str_replace('&', '&amp;', $this->getNotifyUrl())
         );
 
+        //user variable
+        $data->addChild('user_variables')->addChild(
+            'user_variable', $this->getUserVariable()
+        );
+
         $reasons = $data->addChild('reasons');
 
         if (is_string($this->getDescription())) {
